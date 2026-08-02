@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Happy Friendship Day! 💛</title>
+    <style>
+        :root {
+            --gold: #f0a500;
+            --warm-pink: #e8637a;
+            --peach: #f78e69;
+            --cream: #fff8e7;
+            --deep: #2d1b33;
+            --teal: #1a8a7d;
+            --rose: #d44a6a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', 'Georgia', serif;
+            background: linear-gradient(135deg, #1a0a1e 0%, #2d1b33 25%, #1e0a24 50%, #2a1538 75%, #1a0a1e 100%);
+            background-size: 400% 400%;
+            animation: bgShift 20s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: default;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            padding: 20px 10px;
+            min-height: 100vh;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 0%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            font-size: 2rem;
+            animation: floatUp linear infinite;
+            opacity: 0;
+            filter: drop-shadow(0 0 8px rgba(255, 200, 100, 0.6));
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg) scale(0.3); opacity: 0; }
+            5% { opacity: 0.9; }
+            85% { opacity: 0.7; }
+            100% { transform: translateY(-15vh) rotate(360deg) scale(1.4); opacity: 0; }
+        }
+        @keyframes floatUpSlow {
+            0% { transform: translateY(110vh) translateX(0) rotate(0deg) scale(0.2); opacity: 0; }
+            8% { opacity: 0.8; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-20vh) translateX(60px) rotate(540deg) scale(1.6); opacity: 0; }
+        }
+        @keyframes floatUpWide {
+            0% { transform: translateY(115vh) translateX(0) rotate(0deg) scale(0.25); opacity: 0; }
+            6% { opacity: 0.85; }
+            88% { opacity: 0.6; }
+            100% { transform: translateY(-18vh) translateX(-80px) rotate(-360deg) scale(1.5); opacity: 0; }
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 620px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: clamp(24px, 5vw, 40px) clamp(16px, 4vw, 30px) clamp(20px, 4vw, 35px);
+            text-align: center;
+            border: 1.5px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5),
+                        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                        0 0 80px rgba(240, 165, 0, 0.15),
+                        0 0 150px rgba(216, 74, 106, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: cardEntry 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+            width: 100%;
+        }
+
+        @keyframes cardEntry {
+            0% { opacity: 0; transform: translateY(60px) rotateX(8deg) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0) scale(1); }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(240, 165, 0, 0.08), transparent, rgba(232, 99, 122, 0.08), transparent, rgba(240, 165, 0, 0.08), transparent);
+            animation: shimmer 8s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .sparkle-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #f0c060;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            animation: sparklePulse 2s ease-in-out infinite;
+            box-shadow: 0 0 12px #f0a500, 0 0 25px #f0a500;
+        }
+        .sparkle-dot:nth-child(1) { top: 8px; left: 12%; animation-delay: 0s; }
+        .sparkle-dot:nth-child(2) { top: 15px; right: 18%; animation-delay: 0.5s; }
+        .sparkle-dot:nth-child(3) { bottom: 40px; left: 8%; animation-delay: 1s; }
+        .sparkle-dot:nth-child(4) { bottom: 60px; right: 10%; animation-delay: 1.5s; }
+        .sparkle-dot:nth-child(5) { top: 45%; left: 3%; animation-delay: 0.7s; }
+        .sparkle-dot:nth-child(6) { top: 35%; right: 4%; animation-delay: 1.2s; }
+
+        @keyframes sparklePulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(2.2); }
+        }
+
+        .ribbon-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f0a500, #e8873a);
+            color: #1a0a1e;
+            padding: 8px 22px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            animation: bounceBadge 2s ease-in-out infinite;
+            box-shadow: 0 6px 25px rgba(240, 165, 0, 0.45);
+        }
+        @keyframes bounceBadge {
+            0%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-8px); }
+            50% { transform: translateY(0); }
+            70% { transform: translateY(-4px); }
+        }
+
+        .main-heading {
+            font-size: clamp(1.6rem, 5vw, 2.8rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #f9d56e, #f0a500, #f78e69, #e8637a, #f0a500);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 4s ease infinite;
+            margin-bottom: 6px;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .sub-heading {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .heart-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 16px 0;
+            color: #e8637a;
+            font-size: 1.4rem;
+            flex-wrap: wrap;
+        }
+        .heart-divider .line {
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            max-width: 80px;
+            min-width: 40px;
+        }
+        .heart-divider .heart-icon {
+            animation: heartBeat 1.2s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px #e8637a);
+        }
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.35); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.3); }
+            60% { transform: scale(1); }
+        }
+
+        .sender-note {
+            font-size: clamp(0.85rem, 3vw, 1.05rem);
+            color: #f9d56e;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            word-break: break-word;
+        }
+        .sender-note .clear-sender {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+            margin-left: 5px;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+        .sender-note .clear-sender:hover {
+            color: #f0a500;
+        }
+
+        .message-box {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            padding: 22px 18px;
+            margin: 16px 0 22px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+        }
+        .message-box .dynamic-msg {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: #fff8e7;
+            line-height: 1.6;
+            font-style: italic;
+            transition: opacity 0.5s ease;
+            word-break: break-word;
+        }
+
+        .personalize-section {
+            margin: 10px 0 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: clamp(12px, 3vw, 18px) clamp(10px, 3vw, 14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .name-input {
+            flex: 1 1 160px;
+            padding: 12px 18px;
+            border-radius: 30px;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+            font-family: inherit;
+            max-width: 100%;
+        }
+        .name-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .name-input:focus {
+            border-color: #f0a500;
+        }
+        .generated-link-box {
+            display: none;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin-top: 12px;
+            animation: fadeSlide 0.4s ease;
+        }
+        .link-url {
+            flex: 1 1 180px;
+            padding: 10px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(0, 0, 0, 0.4);
+            color: #f9d56e;
+            font-size: 0.8rem;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: text;
+            font-family: monospace;
+            outline: none;
+            max-width: 100%;
+        }
+        .personalize-hint {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .btn {
+            padding: 12px 26px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 700;
+            font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #f0a500, #e8873a);
+            color: #1a0a1e;
+            box-shadow: 0 8px 30px rgba(240, 165, 0, 0.35);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 40px rgba(240, 165, 0, 0.55);
+        }
+        .btn-primary:active {
+            transform: scale(0.94);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.16);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+        .btn-small {
+            padding: 10px 18px;
+            font-size: 0.85rem;
+        }
+
+        .copyright {
+            margin-top: 24px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.5px;
+            font-weight: 400;
+        }
+
+        .confetti-piece {
+            position: fixed;
+            z-index: 200;
+            pointer-events: none;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(-120px) rotate(0deg) scale(1); opacity: 1; }
+            70% { opacity: 1; }
+            100% { transform: translateY(105vh) rotate(720deg) scale(0.4); opacity: 0; }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(120px);
+            background: rgba(240, 165, 0, 0.95);
+            color: #1a0a1e;
+            padding: 14px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            z-index: 300;
+            pointer-events: none;
+            transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 90vw;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 380px) {
+            .btn {
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+            .name-input {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+            .link-url {
+                font-size: 0.7rem;
+                padding: 8px 10px;
+            }
+            .sparkle-dot {
+                width: 4px;
+                height: 4px;
+            }
+            .copyright {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particleCanvas"></canvas>
+    <div class="floating-layer" id="floatingLayer"></div>
+
+    <div class="main-wrapper">
+        <div class="card" id="mainCard">
+            <div class="sparkle-dot"></div>
+            <div class="sparkle-dot"></div>
+            <div class="sparkle-dot"></div>
+            <div class="sparkle-dot"></div>
+            <div class="sparkle-dot"></div>
+            <div class="sparkle-dot"></div>
+
+            <div class="ribbon-badge">✨ Happy Friendship Day ✨</div>
+
+            <p class="sub-heading">— August 2, 2026 —</p>
+
+            <div class="heart-divider">
+                <span class="line"></span>
+                <span class="heart-icon">💛</span>
+                <span class="heart-icon">💖</span>
+                <span class="heart-icon">💛</span>
+                <span class="line"></span>
+            </div>
+
+            <div class="message-box">
+                <div class="sender-note" id="senderNote" style="display: none;">
+                    🌟 <span id="senderNameDisplay"></span> sent you this wish:
+                    <span class="clear-sender" id="clearSenderBtn" title="Remove personalization">(not for you?)</span>
+                </div>
+                <span class="dynamic-msg" id="dynamicMsg">
+                    "Real friends don't let you do stupid things alone." 😂
+                </span>
+            </div>
+
+            <div class="personalize-section">
+                <div class="input-group">
+                    <input type="text" id="senderInput" placeholder="Your name" maxlength="30" class="name-input">
+                    <button class="btn btn-secondary" id="generateLinkBtn">🔗 Get Link</button>
+                </div>
+                <div class="generated-link-box" id="linkBox">
+                    <input type="text" id="linkUrl" readonly class="link-url" value="">
+                    <button class="btn btn-primary btn-small" id="copyLinkBtn">📋 Copy</button>
+                </div>
+                <p class="personalize-hint">Add your name to create a shareable link for your friends 💌</p>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="triggerConfetti()">🎉 Celebrate!</button>
+                <button class="btn btn-secondary" onclick="changeMessage()">💬 New Quote</button>
+                <button class="btn btn-secondary" onclick="shareWish()">📋 Copy Wish</button>
+            </div>
+
+            <!-- Copyright Footer -->
+            <div class="copyright">© 2026 @vixnuhere</div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ==================== PARTICLE CANVAS ====================
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouseX = -100;
+        let mouseY = -100;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvas.height;
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 30;
+                this.size = Math.random() * 2.5 + 0.8;
+                this.speedY = Math.random() * 0.7 + 0.2;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.7 + 0.2;
+                this.hue = Math.random() < 0.5 ? Math.random() * 20 + 35 : Math.random() * 20 + 340;
+                this.twinkleSpeed = Math.random() * 0.03 + 0.005;
+                this.twinkleOffset = Math.random() * Math.PI * 2;
+                this.glowSize = this.size * 3;
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX + Math.sin(this.y * 0.02 + this.twinkleOffset) * 0.3;
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 140) {
+                    const force = (140 - dist) / 140;
+                    this.x += dx * force * 0.015;
+                    this.y += dy * force * 0.015;
+                }
+                if (this.y < -20 || this.x < -20 || this.x > canvas.width + 20) {
+                    this.reset();
+                    this.y = canvas.height + 20;
+                }
+            }
+            draw(ctx, frameCount) {
+                const twinkle = Math.sin(frameCount * this.twinkleSpeed + this.twinkleOffset) * 0.4 + 0.6;
+                const alpha = this.opacity * twinkle;
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.glowSize);
+                gradient.addColorStop(0, `hsla(${this.hue}, 90%, 65%, 1)`);
+                gradient.addColorStop(0.5, `hsla(${this.hue}, 80%, 55%, 0.5)`);
+                gradient.addColorStop(1, `hsla(${this.hue}, 70%, 40%, 0)`);
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.glowSize, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = `hsla(${this.hue}, 100%, 75%, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        const particleCount = Math.min(90, Math.floor(window.innerWidth * 0.12));
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        let frameCount = 0;
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            frameCount++;
+            particles.forEach(p => { p.update(); p.draw(ctx, frameCount); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        document.addEventListener('touchmove', (e) => {
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+        }, { passive: true });
+
+        // ==================== FLOATING EMOJIS ====================
+        const floatingLayer = document.getElementById('floatingLayer');
+        const emojis = ['💛', '💖', '💝', '💕', '💗', '💞', '💟', '🫶', '💫', '✨', '🌟', '🧡', '💐', '🌸', '🦋', '🎀', '💎', '🌈', '☀️', '💛'];
+
+        function createFloatingEmoji() {
+            const span = document.createElement('span');
+            span.className = 'floating-emoji';
+            span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            span.style.left = Math.random() * 90 + '%';
+            span.style.fontSize = (Math.random() * 1.6 + 1.2) + 'rem';
+            const duration = Math.random() * 8 + 8;
+            span.style.animationDuration = duration + 's';
+            const animType = Math.random();
+            if (animType < 0.33) span.style.animationName = 'floatUp';
+            else if (animType < 0.66) span.style.animationName = 'floatUpSlow';
+            else span.style.animationName = 'floatUpWide';
+            span.style.animationDelay = '0s';
+            floatingLayer.appendChild(span);
+            setTimeout(() => { if (span.parentNode) span.parentNode.removeChild(span); }, duration * 1000 + 500);
+        }
+
+        setInterval(() => {
+            if (floatingLayer.children.length < 25) createFloatingEmoji();
+        }, 600);
+        for (let i = 0; i < 12; i++) setTimeout(() => createFloatingEmoji(), i * 300);
+
+        // ==================== CONFETTI ====================
+        function triggerConfetti() {
+            const colors = ['#f0a500', '#e8637a', '#f78e69', '#ffd700', '#ff6b8a', '#ff9a76', '#ffc93c', '#f05454', '#ffb347', '#ff7eb3', '#a0e7e5', '#f9d56e', '#e8873a', '#d44a6a', '#fff176', '#ff8a80', '#ffd54f', '#ff80ab', '#b2ff59', '#40e0d0'];
+            for (let i = 0; i < 80; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.top = -(Math.random() * 40 + 10) + 'px';
+                piece.style.width = (Math.random() * 10 + 5) + 'px';
+                piece.style.height = (Math.random() * 10 + 5) + 'px';
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                piece.style.animationDuration = (Math.random() * 2 + 2.5) + 's';
+                piece.style.animationDelay = Math.random() * 0.8 + 's';
+                if (Math.random() > 0.7) {
+                    piece.style.width = '0';
+                    piece.style.height = '0';
+                    piece.style.borderLeft = (Math.random() * 6 + 4) + 'px solid transparent';
+                    piece.style.borderRight = (Math.random() * 6 + 4) + 'px solid transparent';
+                    piece.style.borderBottom = (Math.random() * 12 + 8) + 'px solid ' + colors[Math.floor(Math.random() * colors.length)];
+                    piece.style.background = 'transparent';
+                    piece.style.borderRadius = '0';
+                }
+                document.body.appendChild(piece);
+                setTimeout(() => { if (piece.parentNode) piece.parentNode.removeChild(piece); }, 3500);
+            }
+        }
+        setTimeout(() => triggerConfetti(), 600);
+
+        // ==================== DYNAMIC MESSAGES (TRENDY 2026) ====================
+        const messages = [
+            "Real friends don't let you do stupid things alone. 😂",
+            "We'll be friends until we're old and senile. Then we'll be new friends. 👵👴",
+            "Friendship: when being weird together is totally normal. 🦄",
+            "A friend is someone who knows your WiFi password. 📶",
+            "Best friends: they know how crazy you are and still choose to be seen with you in public. 🤪",
+            "We go together like copy and paste. 📋",
+            "Good times + Crazy friends = Amazing memories. 🎉",
+            "Friends don't let friends send boring texts. 💬",
+            "You're my favorite notification. 🔔",
+            "Life is too short to have boring friends. 🥳",
+            "We'll be the old people causing trouble in the nursing home. 🦯",
+            "True friendship is when you walk into their house and your WiFi connects automatically. 🏠",
+            "Friends buy you food. Best friends eat your food. 🍕",
+            "I'd walk through fire for you. Well, not fire, because that's dangerous. But a super humid room... absolutely. 💦",
+            "You're the avocado to my toast. 🥑",
+            "Bestie: the person who laughs at your nonsense and still loves you. 💛",
+            "A friend will bail you out of jail. A best friend will be sitting next to you saying 'damn, that was fun'. 🚔",
+            "When I'm with you, even Monday feels like Friday. 🎊",
+            "Friends are like four-leaf clovers: hard to find and lucky to have. 🍀",
+            "We're the kind of friends who can communicate with just a look. 👀",
+            "I like you because you're weird. And I'm weird. And together we're perfectly weird. 🤝",
+            "Good friends don't let you do silly things... they join in. 🤸",
+            "I was going to make a joke about friendship, but I'll just keep it real instead. ✌️",
+            "Thanks for being the meme to my reality. 🖼️",
+            "Our friendship is like a software update – it just keeps getting better. ⚡",
+        ];
+
+        let currentMsgIndex = 0;
+
+        function changeMessage() {
+            const msgEl = document.getElementById('dynamicMsg');
+            let newIndex;
+            do { newIndex = Math.floor(Math.random() * messages.length); } while (newIndex === currentMsgIndex && messages.length > 1);
+            currentMsgIndex = newIndex;
+            msgEl.style.opacity = '0';
+            setTimeout(() => {
+                msgEl.textContent = messages[currentMsgIndex];
+                msgEl.style.opacity = '1';
+            }, 300);
+        }
+
+        // ==================== SHARE / COPY ====================
+        function shareWish() {
+            const msg = document.getElementById('dynamicMsg').textContent;
+            const sender = getSenderFromUrl();
+            const prefix = sender ? `${sender} sent you this Friendship Day wish:\n` : '';
+            const fullWish = `🌟 Happy Friendship Day! 🌟\n\n${prefix}${msg}\n\n— Sent with love 💛\n#FriendshipDay2026`;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(fullWish).then(() => showToast('✅ Wish copied! Send it to your bestie! 💌'))
+                    .catch(() => fallbackCopy(fullWish));
+            } else {
+                fallbackCopy(fullWish);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try { document.execCommand('copy'); showToast('✅ Wish copied! Send it to your bestie! 💌'); }
+            catch (e) { showToast('📋 Could not copy. Please screenshot this!'); }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // ==================== PERSONALIZATION ====================
+        const senderInput = document.getElementById('senderInput');
+        const generateLinkBtn = document.getElementById('generateLinkBtn');
+        const linkBox = document.getElementById('linkBox');
+        const linkUrlInput = document.getElementById('linkUrl');
+        const copyLinkBtn = document.getElementById('copyLinkBtn');
+        const senderNote = document.getElementById('senderNote');
+        const senderNameDisplay = document.getElementById('senderNameDisplay');
+        const clearSenderBtn = document.getElementById('clearSenderBtn');
+
+        function getSenderFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('from') ? decodeURIComponent(params.get('from')) : null;
+        }
+
+        function applySenderUI(senderName) {
+            if (senderName) {
+                senderNote.style.display = 'flex';
+                senderNameDisplay.textContent = senderName;
+                senderInput.value = senderName;
+            } else {
+                senderNote.style.display = 'none';
+                senderNameDisplay.textContent = '';
+                senderInput.value = '';
+                linkBox.style.display = 'none';
+            }
+        }
+
+        function generateLink() {
+            const name = senderInput.value.trim();
+            if (!name) { showToast('🙏 Please enter your name first!'); return; }
+            const encodedName = encodeURIComponent(name);
+            const baseUrl = window.location.origin + window.location.pathname;
+            const fullUrl = `${baseUrl}?from=${encodedName}`;
+            window.history.replaceState({}, '', fullUrl);
+            linkUrlInput.value = fullUrl;
+            linkBox.style.display = 'flex';
+            applySenderUI(name);
+            showToast('🔗 Link generated! Copy and share it with friends.');
+        }
+
+        function copyGeneratedLink() {
+            const url = linkUrlInput.value;
+            if (!url) return;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(() => showToast('📋 Link copied! Send it to your bestie 💛'))
+                    .catch(() => fallbackCopy(url));
+            } else fallbackCopy(url);
+        }
+
+        function clearPersonalization() {
+            const baseUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, '', baseUrl);
+            applySenderUI(null);
+            showToast('🔄 Personalization removed.');
+        }
+
+        generateLinkBtn.addEventListener('click', generateLink);
+        copyLinkBtn.addEventListener('click', copyGeneratedLink);
+        clearSenderBtn.addEventListener('click', clearPersonalization);
+
+        (function initPersonalization() {
+            const sender = getSenderFromUrl();
+            if (sender) {
+                applySenderUI(sender);
+                linkUrlInput.value = window.location.href;
+                linkBox.style.display = 'flex';
+            }
+        })();
+
+        // ==================== CARD CLICK EFFECT ====================
+        const mainCard = document.getElementById('mainCard');
+        mainCard.addEventListener('click', function(e) {
+            if (e.target.closest('button') || e.target.closest('input')) return;
+            const ripple = document.createElement('div');
+            ripple.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.15);
+                width: 20px;
+                height: 20px;
+                pointer-events: none;
+                z-index: 3;
+                left: ${e.clientX - mainCard.getBoundingClientRect().left - 10}px;
+                top: ${e.clientY - mainCard.getBoundingClientRect().top - 10}px;
+                animation: rippleOut 0.8s ease-out forwards;
+            `;
+            mainCard.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 800);
+        });
+
+        const rippleStyle = document.createElement('style');
+        rippleStyle.textContent = `@keyframes rippleOut { 0% { transform: scale(0); opacity: 0.7; } 100% { transform: scale(30); opacity: 0; } }`;
+        document.head.appendChild(rippleStyle);
+
+        // ==================== KEYBOARD SHORTCUTS ====================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'c' || e.key === 'C') triggerConfetti();
+            if (e.key === 'n' || e.key === 'N') changeMessage();
+            if (e.key === 's' || e.key === 'S') shareWish();
+        });
+
+        // ==================== INITIAL SETUP ====================
+        currentMsgIndex = Math.floor(Math.random() * messages.length);
+        document.getElementById('dynamicMsg').textContent = messages[currentMsgIndex];
+
+        console.log('%c💛 Happy Friendship Day 2026! %c💛', 'font-size:1.5em; color:#f0a500;', 'font-size:1.5em; color:#e8637a;');
+        console.log('%cYou are an amazing friend. This page was made with love. 💫', 'color:#fff; font-size:1em;');
+        console.log('%cPress C = Confetti | N = New Quote | S = Share', 'color:#f78e69;');
+    </script>
+</body>
+</html>
